@@ -20,11 +20,16 @@ public class BasicPlayer implements Playable {
         private String sequence;
         private Orientation orientation;
 
-        public PlayerBuilder withPosition(Position position){ this.position = position; return this; }
-        public PlayerBuilder withName(String name) { this.name = name; return this; }
+        public PlayerBuilder withPosition(Position position){ this.position = requireNonNull(position); return this; }
+        public PlayerBuilder withName(String name) { this.name = requireNonNull(name); return this; }
         public PlayerBuilder withSequence(String sequence) { this.sequence = sequence; return this; }
-        public PlayerBuilder withOrientation(Orientation orientation){ this.orientation = orientation; return this; }
-        public BasicPlayer build(){ return new BasicPlayer(this); }
+        public PlayerBuilder withOrientation(Orientation orientation){ this.orientation = requireNonNull(orientation); return this; }
+        public BasicPlayer build(){
+            if(position == null) throw new IllegalArgumentException("Position must be set");
+            if(name == null) throw new IllegalArgumentException("Name must be set");
+            if(orientation == null) throw new IllegalArgumentException("Orientation must be set");
+            return new BasicPlayer(this);
+        }
     }
     private Position position;
     private final String name;
@@ -101,5 +106,14 @@ public class BasicPlayer implements Playable {
         return foundTreasures;
     }
 
-
+    @Override
+    public String toString() {
+        return "BasicPlayer{" +
+                "position=" + position +
+                ", name='" + name + '\'' +
+                ", orientation=" + orientation +
+                ", sequence=" + sequence +
+                ", foundTreasures=" + foundTreasures +
+                '}';
+    }
 }

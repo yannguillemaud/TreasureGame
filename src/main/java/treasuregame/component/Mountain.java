@@ -41,4 +41,11 @@ public class Mountain implements GameComponent {
     public int hashCode() {
         return Objects.hash(position);
     }
+
+    @Override
+    public String toString() {
+        return "Mountain{" +
+                "position=" + position +
+                '}';
+    }
 }
