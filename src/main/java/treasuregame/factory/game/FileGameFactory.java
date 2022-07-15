@@ -25,7 +25,7 @@ public class FileGameFactory implements GameFactory<Path> {
 
     private BasicGameImpl createGame(String source){
         var tokens = source.split(" - ");
-        if(!tokens[0].equals("C")) throw new IllegalArgumentException();
+        if(!tokens[0].equals("C")) throw new IllegalArgumentException("Game line: incorrect values");
         return new BasicGameImpl(Integer.parseInt(tokens[1]) -1, Integer.parseInt(tokens[2]) -1);
     }
 
@@ -39,7 +39,7 @@ public class FileGameFactory implements GameFactory<Path> {
             var game = content.stream()
                     .findFirst()
                     .map(this::createGame)
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(() -> new IllegalArgumentException("Game line not found"));
             // Components creation
             content.stream()
                     .skip(1)

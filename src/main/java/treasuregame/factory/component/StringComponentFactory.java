@@ -17,38 +17,42 @@ public class StringComponentFactory implements GameComponentFactory<String> {
     public Optional<GameComponent> fromSource(String source) {
         Objects.requireNonNull(source);
         var tokens = source.split(" - ");
+        if(tokens.length == 0) throw new IllegalArgumentException("Incorrect parsing values");
+
         var charCode = tokens[0];
         return Optional.ofNullable(switch (charCode) {
+
             case "A" -> {
-                if(tokens.length < 6) throw new IllegalArgumentException();
+                if(tokens.length < 5) throw new IllegalArgumentException("Not enough playable parameters");
                 var name = tokens[1];
                 var x = Integer.parseInt(tokens[2]);
                 var y = Integer.parseInt(tokens[3]);
-                var position = new Position(x, y);
                 var orientation = Orientation.fromString(tokens[4]);
-                var sequence = tokens[5];
+                var sequence = tokens.length == 6 ? tokens[5] : "";
+
                 yield new BasicPlayer.PlayerBuilder()
                         .withName(name)
-                        .withPosition(position)
+                        .withPosition(new Position(x, y))
                         .withOrientation(orientation)
                         .withSequence(sequence)
                         .build();
             }
+
             case "T" -> {
-                if(tokens.length < 4) throw new IllegalArgumentException();
+                if(tokens.length < 4) throw new IllegalArgumentException("Not enough treasure parameters");
                 var x = Integer.parseInt(tokens[1]);
                 var y = Integer.parseInt(tokens[2]);
-                var position = new Position(x, y);
-                var nbTrasure = Integer.parseInt(tokens[3]);
-                yield new Treasure(position, nbTrasure);
+                var nbTrasures = Integer.parseInt(tokens[3]);
+                yield new Treasure(new Position(x, y), nbTrasures);
             }
+
             case "M" -> {
-                if(tokens.length < 3) throw new IllegalArgumentException();
+                if(tokens.length < 3) throw new IllegalArgumentException("Not enough Mountain parameters");
                 var x = Integer.parseInt(tokens[1]);
                 var y = Integer.parseInt(tokens[2]);
-                var position = new Position(x, y);
-                yield new Mountain(position);
+                yield new Mountain(new Position(x, y));
             }
+
             default -> null;
         });
     }
