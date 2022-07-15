@@ -5,9 +5,7 @@ import treasuregame.component.GameComponent;
 import treasuregame.component.IGame;
 import treasuregame.component.Map;
 import treasuregame.component.playable.Playable;
-import treasuregame.component.playable.BasicPlayer;
 import treasuregame.visitor.action.DefaultMovementActionVisitor;
-import treasuregame.visitor.component.IsComponentPlayableVisitor;
 import treasuregame.visitor.component.PositionVisitor;
 import treasuregame.observer.BasicGameObserver;
 
@@ -30,7 +28,7 @@ public class BasicGameImpl implements IGame {
 
     private final List<BasicGameObserver> observers = new ArrayList<>();
     private final List<GameComponent> components = new ArrayList<>();
-    private final Queue<BasicPlayer> basicPlayers = new ArrayDeque<>();
+    private final Queue<Playable> basicPlayers = new ArrayDeque<>();
 
     /**
      * GameComponents un/registration
@@ -56,7 +54,6 @@ public class BasicGameImpl implements IGame {
         // var init
         var currentMap = new Map(horizontal, vertical, components);
         var positionVisitor = new PositionVisitor();
-        var isPlayerVisitor = new IsComponentPlayableVisitor();
         var movementVisitor = new DefaultMovementActionVisitor(currentMap);
 
         notifyStart();
@@ -66,9 +63,8 @@ public class BasicGameImpl implements IGame {
 
         // retrieves players among registered components
         components.stream()
-                .map(isPlayerVisitor::visit)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .filter(Playable.class::isInstance)
+                .map(Playable.class::cast)
                 .forEach(basicPlayers::add);
 
         // starting turn game
