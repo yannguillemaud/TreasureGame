@@ -21,9 +21,7 @@ public class ActionFactoryTest {
     @Test
     public void shouldCreateMoveAction(){
         var optionalAction = factory.fromSource('A');
-        assertDoesNotThrow(() -> {
-            assertTrue(optionalAction.orElseThrow() instanceof MoveAction);
-        });
+        assertDoesNotThrow(() -> assertTrue(optionalAction.orElseThrow() instanceof MoveAction));
     }
 
     @Test
