@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import treasuregame.component.Mountain;
 import treasuregame.component.Position;
+import treasuregame.component.Treasure;
+import treasuregame.component.playable.BasicPlayer;
+import treasuregame.component.playable.Orientation;
 import treasuregame.factory.component.GameComponentFactory;
 import treasuregame.factory.component.StringComponentFactory;
 import treasuregame.factory.game.FileGameFactory;
@@ -97,13 +100,68 @@ public class BasicGameTest {
     }
 
     @Test
-    public void runGameShouldThrowIAE(){
+    public void runGameShouldThrowIAEWithIncorrectMapCoords(){
         var game1 = new BasicGameImpl(-1, 0);
         var game2 = new BasicGameImpl(0, -1);
         assertAll(
                 () -> assertThrows(IllegalArgumentException.class, game1::runGame),
                 () -> assertThrows(IllegalArgumentException.class, game2::runGame)
         );
+    }
+
+    @Test
+    public void runGameShouldThrowIAEWithIncorrectComponentsCoords() {
+        var game = new BasicGameImpl(3, 3);
+        game.registerGameComponent(new Mountain(new Position(4, 3)));
+        assertThrows(IllegalArgumentException.class, game::runGame);
+    }
+
+    @Test
+    public void runGameShouldThrowIAEWithIncorrectComponentsCoords2() {
+        var game = new BasicGameImpl(3, 3);
+        game.registerGameComponent(
+                new BasicPlayer.PlayerBuilder()
+                        .withName("Alice")
+                        .withPosition(new Position(3, 3))
+                        .withOrientation(Orientation.SOUTH)
+                        .build()
+        );
+        game.registerGameComponent(
+                new BasicPlayer.PlayerBuilder()
+                        .withName("Bob")
+                        .withPosition(new Position(3, 3))
+                        .withOrientation(Orientation.NORTH)
+                        .build()
+        );
+        assertThrows(IllegalArgumentException.class, game::runGame);
+    }
+
+    @Test
+    public void runGameShouldThrowIAEWithIncorrectComponentsCoords3() {
+        var game = new BasicGameImpl(3, 3);
+        game.registerGameComponent(
+                new BasicPlayer.PlayerBuilder()
+                        .withName("Alice")
+                        .withPosition(new Position(3, 3))
+                        .withOrientation(Orientation.SOUTH)
+                        .build()
+        );
+        game.registerGameComponent(new Mountain(new Position(3, 3)));
+        assertThrows(IllegalArgumentException.class, game::runGame);
+    }
+
+    @Test
+    public void runGameShouldThrowIAEWithIncorrectComponentsCoords4() {
+        var game = new BasicGameImpl(3, 3);
+        game.registerGameComponent(new Treasure(new Position(3, 3), 1));
+        game.registerGameComponent(
+                new BasicPlayer.PlayerBuilder()
+                        .withName("Alice")
+                        .withPosition(new Position(3, 3))
+                        .withOrientation(Orientation.SOUTH)
+                        .build()
+        );
+        assertDoesNotThrow(game::runGame);
     }
 
     @Test
