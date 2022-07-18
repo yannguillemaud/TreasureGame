@@ -23,7 +23,7 @@ import static treasuregame.action.PlayableAction.AuthorizedActions.*;
  */
 public class CharActionFactory implements ActionFactory<Character> {
     private static final Map<AuthorizedActions, PlayableAction> ACTION_MAP = Map.of(
-        MOVE_UP, new MoveAction((component) -> {
+        MOVE_UP, new MoveAction(component -> {
             var position = component.getPosition();
                 return switch (component.getOrientation()) {
                     case NORTH -> new Position(position.x(), position.y() - 1);
@@ -33,19 +33,19 @@ public class CharActionFactory implements ActionFactory<Character> {
                 };
         }),
 
-        MOVE_LEFT, new TurnAction((component -> switch(component.getOrientation()) {
+        MOVE_LEFT, new TurnAction(component -> switch(component.getOrientation()) {
             case NORTH -> Orientation.WEST;
             case SOUTH -> Orientation.EAST;
             case EAST -> NORTH;
             case WEST -> Orientation.SOUTH;
-        })),
+        }),
 
-        MOVE_RIGHT, new TurnAction((component -> switch(component.getOrientation()) {
+        MOVE_RIGHT, new TurnAction(component -> switch(component.getOrientation()) {
             case NORTH -> Orientation.EAST;
             case SOUTH -> Orientation.WEST;
             case EAST -> Orientation.SOUTH;
             case WEST -> NORTH;
-        }))
+        })
     );
 
     @Override

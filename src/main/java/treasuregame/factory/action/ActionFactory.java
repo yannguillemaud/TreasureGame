@@ -9,5 +9,5 @@ import java.util.Optional;
  * @param <T> the type of the given data
  */
 public interface ActionFactory<T> {
-    Optional<? extends IAction> fromSource(T source);
+    Optional<IAction> fromSource(T source);
 }
