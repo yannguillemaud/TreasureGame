@@ -1,11 +1,9 @@
 package treasuregame.component;
 
-import treasuregame.component.*;
 import treasuregame.component.playable.BasicPlayer;
 import treasuregame.visitor.component.GameComponentVisitor;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.function.Predicate.not;
@@ -44,7 +42,7 @@ public class Map {
                     .collect(Collectors.groupingBy(GameComponent::getPosition));
             if(currentMap.values().stream()
                     .flatMap(Collection::stream)
-                    .anyMatch(component -> !isAvailable(component, component.getPosition())))
+                    .anyMatch(component -> !isInitAuthorized(component.getPosition())))
             {
                 throw new IllegalArgumentException();
             }
@@ -70,10 +68,16 @@ public class Map {
          * @return true if a component blocks the position, false otherwise
          */
         private boolean isBlocked(GameComponent component, Position position){
-            var componentsOnCase = componentsOnCase(position);
-            return componentsOnCase.stream()
-                    .filter(not(gameComponent -> gameComponent.equals(component)))
+            return componentsOnCase(position).stream()
+                    .filter(not(existing -> existing.equals(component)))
                     .anyMatch(isBlockingVisitor::visit);
+        }
+
+        private boolean isInitAuthorized(Position position){
+            return isInMap(position) && componentsOnCase(position).stream()
+                    .map(isBlockingVisitor::visit)
+                    .filter(Boolean::booleanValue)
+                    .count() < 2;
         }
 
         /**
