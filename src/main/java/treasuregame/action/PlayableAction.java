@@ -1,6 +1,5 @@
 package treasuregame.action;
 
-import treasuregame.action.IAction;
 import treasuregame.component.GameComponent;
 
 public interface PlayableAction extends IAction {
