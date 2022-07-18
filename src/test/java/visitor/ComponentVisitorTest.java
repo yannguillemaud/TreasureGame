@@ -89,6 +89,7 @@ public class ComponentVisitorTest {
 
         var strings = game.getComponents().stream()
                 .map(STRING_VISITOR::visit)
+                .map(StringBuilder::toString)
                 .toList();
 
         assertTrue(List.of(
