@@ -3,7 +3,6 @@ package treasuregame.observer;
 import treasuregame.game.BasicGameImpl;
 import treasuregame.visitor.component.ComponentToStringVisitor;
 
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.function.Predicate.not;
@@ -20,7 +19,7 @@ public class ConsoleWriterObserver implements BasicGameObserver {
         System.out.println(
                 game.getComponents().stream()
                 .map(TO_STRING_VISITOR::visit)
-                .filter(not(String::isBlank))
+                .filter(not(StringBuilder::isEmpty))
                 .collect(Collectors.joining("\n", game.getSizeMap().concat("\n"), ""))
         );
     }

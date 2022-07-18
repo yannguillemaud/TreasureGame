@@ -40,7 +40,7 @@ public class ComponentVisitorTest {
             A - Bob - 1 - 2 - N - AA
             """;
 
-    private static final GameComponentVisitor<String> STRING_VISITOR = new ComponentToStringVisitor();
+    private static final GameComponentVisitor<StringBuilder> STRING_VISITOR = new ComponentToStringVisitor();
 
     @Test
     public void shouldGetCorrectPositions(@TempDir Path tempDir) throws IOException {

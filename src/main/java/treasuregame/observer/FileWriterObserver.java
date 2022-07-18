@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static java.util.function.Predicate.not;
 
 public class FileWriterObserver implements BasicGameObserver {
-    private static final GameComponentVisitor<String> TO_STRING_VISITOR = new ComponentToStringVisitor();
+    private static final GameComponentVisitor<StringBuilder> TO_STRING_VISITOR = new ComponentToStringVisitor();
     private static final String FILE_NAME = "output.txt";
 
     private final Path directory;
@@ -30,7 +30,8 @@ public class FileWriterObserver implements BasicGameObserver {
     public void onGameStop(BasicGameImpl game) {
         var gameResult = game.getComponents().stream()
                 .map(TO_STRING_VISITOR::visit)
-                .filter(not(String::isBlank))
+                .filter(not(StringBuilder::isEmpty))
+                .map(StringBuilder::toString)
                 .collect(Collectors.joining("\n", game.getSizeMap().concat("\n"), ""));
 
         try {

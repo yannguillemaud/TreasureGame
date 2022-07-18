@@ -7,25 +7,25 @@ import treasuregame.component.Treasure;
 /**
  * Visitor used to print GameComponents
  */
-public class ComponentToStringVisitor implements GameComponentVisitor<String>{
+public class ComponentToStringVisitor implements GameComponentVisitor<StringBuilder>{
     @Override
-    public String visit(BasicPlayer basicPlayer) {
-        return "A - " + basicPlayer.getName() +
+    public StringBuilder visit(BasicPlayer basicPlayer) {
+        return new StringBuilder("A - " + basicPlayer.getName() +
                 " - " + basicPlayer.getPosition().x() +
                 " - " + basicPlayer.getPosition().y() +
                 " - " + basicPlayer.getOrientation() +
-                " - " + basicPlayer.getFoundTreasures();
+                " - " + basicPlayer.getFoundTreasures());
     }
 
     @Override
-    public String visit(Mountain mountain) {
-        return "M - " + mountain.getPosition().x() + " - " + mountain.getPosition().y();
+    public StringBuilder visit(Mountain mountain) {
+        return new StringBuilder("M - " + mountain.getPosition().x() + " - " + mountain.getPosition().y());
     }
 
     @Override
-    public String visit(Treasure treasure) {
+    public StringBuilder visit(Treasure treasure) {
         if(treasure.getRemainingTreasure() > 0){
-            return "T - " + treasure.getPosition().x() + " - " + treasure.getPosition().y() + " - " + treasure.getRemainingTreasure();
-        } else return "";
+            return new StringBuilder("T - " + treasure.getPosition().x() + " - " + treasure.getPosition().y() + " - " + treasure.getRemainingTreasure());
+        } else return new StringBuilder();
     }
 }
