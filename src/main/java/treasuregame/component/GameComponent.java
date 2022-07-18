@@ -4,8 +4,7 @@ import treasuregame.action.IAction;
 
 /**
  * Interface used to describe every component of a game
- * V1.0
- *  TODO: orientation refactorization
+ * V1.1
  */
 public interface GameComponent {
     void applyAction(IAction action);

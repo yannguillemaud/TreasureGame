@@ -1,6 +1,5 @@
 package treasuregame.component;
 
-import treasuregame.component.GameComponent;
 import treasuregame.observer.BasicGameObserver;
 
 /**
