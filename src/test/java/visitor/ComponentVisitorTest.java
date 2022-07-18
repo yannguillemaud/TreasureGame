@@ -2,7 +2,6 @@ package visitor;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import treasuregame.action.MoveAction;
 import treasuregame.component.GameComponent;
 import treasuregame.component.Position;
 import treasuregame.factory.component.GameComponentFactory;
@@ -10,18 +9,15 @@ import treasuregame.factory.component.StringComponentFactory;
 import treasuregame.factory.game.FileGameFactory;
 import treasuregame.factory.game.GameFactory;
 import treasuregame.game.BasicGameImpl;
-import treasuregame.visitor.action.DefaultMovementActionVisitor;
-import treasuregame.visitor.action.MovementActionVisitor;
 import treasuregame.visitor.component.ComponentToStringVisitor;
 import treasuregame.visitor.component.GameComponentVisitor;
-import treasuregame.visitor.component.TreasureCollisionVisitor;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ComponentVisitorTest {
     private static final GameComponentFactory<String> COMPONENT_FACTORY = new StringComponentFactory();
@@ -40,7 +36,7 @@ public class ComponentVisitorTest {
             A - Bob - 1 - 2 - N - AA
             """;
 
-    private static final GameComponentVisitor<StringBuilder> STRING_VISITOR = new ComponentToStringVisitor();
+    private static final ComponentToStringVisitor STRING_VISITOR = new ComponentToStringVisitor();
 
     @Test
     public void shouldGetCorrectPositions(@TempDir Path tempDir) throws IOException {
