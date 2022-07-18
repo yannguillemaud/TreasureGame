@@ -3,7 +3,7 @@ package treasuregame.observer;
 import treasuregame.game.BasicGameImpl;
 import treasuregame.visitor.component.ComponentToStringVisitor;
 
-import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.function.Predicate.not;

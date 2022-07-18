@@ -1,10 +1,10 @@
 package treasuregame.visitor.component;
 
-import treasuregame.action.PickTreasureAction;
+import treasuregame.action.IAction;
 import treasuregame.component.GameComponent;
 import treasuregame.component.Mountain;
-import treasuregame.component.playable.BasicPlayer;
 import treasuregame.component.Treasure;
+import treasuregame.component.playable.BasicPlayer;
 
 import java.util.Objects;
 
@@ -12,7 +12,12 @@ import java.util.Objects;
  * Class used to apply a collision between a player and a treasure
  */
 public class TreasureCollisionVisitor implements GameComponentVisitor<Void> {
-    private static final PickTreasureAction pickTreasureAction = new PickTreasureAction();
+    private static final IAction pickTreasureAction = component -> {
+        if (component instanceof BasicPlayer basicPlayer) {
+            basicPlayer.pickTreasure();
+        }
+    };
+
     private final GameComponent player;
 
     public TreasureCollisionVisitor(GameComponent player){

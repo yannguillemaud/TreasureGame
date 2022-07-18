@@ -1,22 +1,20 @@
 package visitor;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import treasuregame.action.MoveAction;
 import treasuregame.component.GameComponent;
-import treasuregame.component.Mountain;
 import treasuregame.component.Position;
-import treasuregame.component.Treasure;
-import treasuregame.component.playable.BasicPlayer;
-import treasuregame.component.playable.Orientation;
 import treasuregame.factory.component.GameComponentFactory;
 import treasuregame.factory.component.StringComponentFactory;
 import treasuregame.factory.game.FileGameFactory;
 import treasuregame.factory.game.GameFactory;
 import treasuregame.game.BasicGameImpl;
+import treasuregame.visitor.action.DefaultMovementActionVisitor;
+import treasuregame.visitor.action.MovementActionVisitor;
 import treasuregame.visitor.component.ComponentToStringVisitor;
 import treasuregame.visitor.component.GameComponentVisitor;
-import treasuregame.visitor.component.PositionVisitor;
+import treasuregame.visitor.component.TreasureCollisionVisitor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GameComponentVisitorTest {
+public class ComponentVisitorTest {
     private static final GameComponentFactory<String> COMPONENT_FACTORY = new StringComponentFactory();
     private static final GameFactory<Path> GAME_FACTORY = new FileGameFactory(COMPONENT_FACTORY);
     private static final String USE_CASE = """
@@ -36,8 +34,13 @@ public class GameComponentVisitorTest {
             T - 1 - 3 - 3
             """;
 
-    private static final GameComponentVisitor<Position> positionVisitor = new PositionVisitor();
-    private static final GameComponentVisitor<String> stringVisitor = new ComponentToStringVisitor();
+    private static final String PLAYERS_CASE = """
+            C - 3 - 4
+            A - Alice - 1 - 1 - S
+            A - Bob - 1 - 2 - N - AA
+            """;
+
+    private static final GameComponentVisitor<String> STRING_VISITOR = new ComponentToStringVisitor();
 
     @Test
     public void shouldGetCorrectPositions(@TempDir Path tempDir) throws IOException {
@@ -47,7 +50,7 @@ public class GameComponentVisitorTest {
         game.runGame();
 
         var positions = game.getComponents().stream()
-                .map(positionVisitor::visit)
+                .map(GameComponent::getPosition)
                 .toList();
 
         assertTrue(List.of(
@@ -60,6 +63,24 @@ public class GameComponentVisitorTest {
     }
 
     @Test
+    public void shouldGetCorrectPositions2(@TempDir Path tempDir) throws IOException {
+        var inputPath = Files.createTempFile(tempDir, "input", "txt");
+        Files.write(inputPath, PLAYERS_CASE.getBytes());
+        BasicGameImpl game = (BasicGameImpl) GAME_FACTORY.fromSource(inputPath).orElseThrow();
+        game.runGame();
+
+        var positions = game.getComponents().stream()
+                .map(GameComponent::getPosition)
+                .toList();
+
+        assertTrue(List.of(
+                        new Position(1, 1),
+                        new Position(1, 2))
+                .containsAll(positions)
+        );
+    }
+
+    @Test
     public void shouldGetCorrectStrings(@TempDir Path tempDir) throws IOException {
         var inputPath = Files.createTempFile(tempDir, "input", "txt");
         Files.write(inputPath, USE_CASE.getBytes());
@@ -67,7 +88,7 @@ public class GameComponentVisitorTest {
         game.runGame();
 
         var strings = game.getComponents().stream()
-                .map(stringVisitor::visit)
+                .map(STRING_VISITOR::visit)
                 .toList();
 
         assertTrue(List.of(

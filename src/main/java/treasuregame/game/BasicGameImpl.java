@@ -107,15 +107,17 @@ public class BasicGameImpl implements IGame {
     /**
      * Observers un/registration
      */
+    @Override
     public void registerObserver(BasicGameObserver observer){
         observers.add(requireNonNull(observer));
     }
 
+    @Override
     public void unregisterObserver(BasicGameObserver observer){
         if (!observers.remove(requireNonNull(observer))) throw new IllegalArgumentException();
     }
 
-    public List<? extends GameComponent> getComponents(){
+    public List<GameComponent> getComponents(){
         return Collections.unmodifiableList(components);
     }
 
